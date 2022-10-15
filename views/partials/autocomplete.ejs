@@ -1,0 +1,16 @@
+<!-- <script type="text/javascript">
+    var search = document.querySelector('input').value;
+    document.getElementById("demo").innerHTML = search;
+    var textseasrch = search.value;
+    //console.log("tecxtsearch = ", search);
+  // var input = " https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + textseasrch
+  //   + "&key=AIzaSyBvUEHlsBw5OrDxRXbFsy7G7QmkBVsdEWY" + "&sessiontoken=1234567891"; console.log("inpit=", input);
+</script> -->
+<script>
+    function activatePlacesSearch() {
+        var input = document.getElementById('search');
+        var autocomplete = new google.maps.places.Autocomplete(input);
+    }
+</script>
+<script type="text/javascript"
+    src="https://maps.googleapis.com/maps/api/js?key=<%=process.env.GOOGLE_PLACES_API_KEY%>&libraries=places&callback=activatePlacesSearch"></script>

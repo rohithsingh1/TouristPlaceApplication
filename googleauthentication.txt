@@ -1,0 +1,83 @@
+ ///GoogleStrategy = require('passport-google-oauth').OAuth2Strategy,
+    //GoogleStrategy = require("passport-google-oauth20").Strategy,
+// passport.use(new GoogleStrategy({
+//     // options for GoogleStrategy
+//     callbackURL: process.env.GOOGLE_REDIRECT, // this must match your google api settings
+//     clientID: process.env.GOOGLE_CLIENT_ID, // e.g. asdfghjkljhgfdsghjk.apps.googleusercontent.com
+//     clientSecret: process.env.GOOGLE_CLIENT_SECRET // e.g. _ASDFA%DFASDFASDFASD#FAD-
+// }, function (accessToken, refreshToken, email, profile, done) {
+//     //callback function
+//     var password = "touristplace12345";
+//     var newuser = new User({
+//         username:profile.displayName,
+//         avatar:profile.photos[0].value,
+//         email:profile.emails[0].value,
+//         isUser:'true',
+//         google: {
+//             username: profile.displayName,
+//             id: profile.id,
+//             email: profile.emails[0].value,
+//             photo: profile.photos[0].value
+//         }
+//     });
+//     console.log("newuser.google",newuser.google);
+//     User.register(newuser.google, password, function (err, user) {
+//         console.log("user",user);
+//         if (err) {
+//             console.log("user already registerd!!!!!!!");
+//             User.findOne({ "google.id": profile.id }, function (err, user1) {
+//                 console.log("user123456789",user1)
+//                 if (err) {
+//                     console.log("user not found in database!!!!!");
+//                     done(null, user);
+//                 } else {
+//                     console.log("current user", user1);
+//                     done(null, user1);
+//                 }
+//             });
+//         } else {
+//             console.log("new user", user);
+//             done(null, user);
+//         }
+//     });
+// })
+// )
+// passport.serializeUser(function (user, done) {
+//     console.log("serializeruser-------", user);
+//     done(null, user.id);
+// });
+// passport.deserializeUser(function (id, done) {
+//     console.log("deserilaizeruser---------", id);
+//     User.findById(id, function (user) {
+//         done(null, user);
+//     })
+// });
+
+
+
+
+
+// passport.use(new LocalStrategy({
+//     usernameField: 'email',
+//     passwordField: 'password',
+//     session: false
+
+// },
+//     function (username, password, done) {
+//         console.log('username', username, 'password', password, 'done', done)
+//         User.find({ email: username }, function (err, user) {
+//             console.log('err', err)
+//             console.log('user', user)
+//             if (err) {
+//                 return done(err);
+//             }
+//             if (!user) {
+//                 return done(null, false);
+//             }
+//             return done(null, user);
+//         });
+//     }
+// ));
+// passport.use(User.createStrategy());
+// passport.serializeUser(User.serializeUser());
+// passport.deserializeUser(User.deserializeUser());

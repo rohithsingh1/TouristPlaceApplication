@@ -1,0 +1,162 @@
+<% include ../partials/header %>
+
+<div class="container">
+	<div class="row ">
+		<div class="col-md-4">
+			<div class="thumbnail" style="padding:0px;border-radius: 20px;">
+				<img src="<%= user.avatar %>" alt="user profile image"
+					style="width:100%;border-top-right-radius: 20px;border-top-left-radius: 20px;">
+				<div class="caption" style="padding:9px; margin-bottom: 28px;">
+					<div class="text-center">
+						<h4><%= user.username %></h4>
+					</div>
+					<p>
+						<button class="btn btn-info btn-xs pull-left" data-toggle="modal" data-target="#modal">Add
+							Image</button>
+						<a class="btn btn-success btn-xs pull-right" href="mailto:<%= user.email %>"
+							style="text-decoration : none;">Contact</a>
+					</p>
+				</div>
+			</div>
+			<div>
+				<ul class="list-group">
+					<li class="list-group-item  active"><a style="text-decoration : none;color:springgreen;"
+							href="#TourCamps" data-toggle="tab">TourCamps</a></li>
+					<li class="list-group-item "><a style="text-decoration : none;color: springgreen;" href="#comments"
+							data-toggle="tab">comments</a></li>
+					<li class="list-group-item "><a style="text-decoration : none;color: springgreen;" href="#reviews"
+							data-toggle="tab">Reviews</a></li>
+				</ul>
+			</div>
+			<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+				aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header text-center">
+							<h4 class="modal-title w-100 font-weight-bold">Add Image</h4>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<form action="/users/AddImage/<%= user._id %>" method="POST" enctype="multipart/form-data">
+								<div class="form-group">
+									<input class="form-control" style="height: 40px;width: 100%;" type="text"
+										name="images" placeholder="<%= user.avatar %>">
+								</div>
+								<h3 class="text-center"> or</h3>
+								<div class="form-group">
+									<input type="file" class="form-control" accept="image/*" name="photo">
+								</div>
+								<div class="form-group">
+									<button class="btn btn-sm btn-success pull-left">Submit!</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-8">
+			<div class="tab-content">
+				<div id="TourCamps" class="tab-pane in active">
+					<% if(campgrounds.length === 0){ %>
+					<h1>
+						<em>No TourCamps yet.</em>
+					</h1>
+					<% }else{ %>
+					<div class="row text-center" style="display:flex; flex-wrap: wrap;">
+						<% for(var i=0;i<campgrounds.length;i++){ %>
+						<div class="col-md-4 col-sm-12">
+							<div class="thumbnail zoom" style="padding:0px;border-radius: 20px;">
+								<img src=" <%= campgrounds[i].image %> "
+									style="width:100%;max-height: 100%;border-top-right-radius: 20px;border-top-left-radius: 20px;">
+								<div class="caption">
+									<h4>
+										<a href="/campgrounds/<%= campgrounds[i]._id %>" class="btn btn-primary"
+											style="border-radius: 20px;"><%= campgrounds[i].name %></a>
+									</h4>
+								</div>
+							</div>
+						</div>
+						<% } %>
+					</div>
+					<% } %>
+				</div>
+				<div id="comments" class="tab-pane">
+					<% if(comments.length === 0){ %>
+					<h1>
+						<em>No comments yet.</em>
+					</h1>
+					<% }else{ %>
+					<div class="well">
+						<% for(var i=0;i<comments.length;i++){ %>
+						<div class="row">
+							<div class="col-md-12">
+								<span class="pull-right"><%= moment(comments[i].createdAt).fromNow() %></span>
+								<p>
+									<%= comments[i].text %>;
+								</p>
+							</div>
+						</div>
+						<%}%>
+						<br>
+				   </div>
+			 <% } %>
+					</div>
+					<div id="reviews" class="tab-pane">
+						<% if(reviews.length === 0){ %>
+						<h1>
+							<em>No reviews yet.</em>
+						</h1>
+						<% }else{ %>
+						<div class="thumbnail">
+							<div class="caption-full">
+								<% for(var i=0;i<reviews.length;i++){ %>
+								<div class="row">
+									<div class="col-md-12">
+										<span class="pull-left">
+											<span class="fa fa-star checked"></span>
+											<span
+												class="fa fa-star <% if (reviews[i].rating > 1.5) { %> checked <% } %>"></span>
+											<span
+												class="fa fa-star <% if (reviews[i].rating > 2.5) { %> checked <% } %>"></span>
+											<span
+												class="fa fa-star <% if (reviews[i].rating > 3.5) { %> checked <% } %>"></span>
+											<span
+												class="fa fa-star <% if (reviews[i].rating > 4.5) { %> checked <% } %>"></span>
+										</span>
+										</p>
+										<br>
+										<p>
+											<a href="/campgrounds/<%= reviews[i].campground %>"
+												style="text-decoration : none;"><%= reviews[i].text %></a>
+											<span
+												class="pull-right"><%= moment(reviews[i].createdAt).fromNow() %></span>
+										</p>
+
+										<% if(currentUser && reviews[i].author.id.equals(currentUser._id) || currentUser && currentUser.isAdmin){ %>
+										<div class="pull-left">
+											<a href="/campgrounds/<%= reviews[i].campground %>/reviews/<%= reviews[i]._id %>/edit"
+												class="btn btn-primary btn-xs">Edit</a>
+											<form style="display:inline;" class="delete-form"
+												action="/campgrounds/<%=  reviews[i].campground  %>/reviews/<%= reviews[i]._id%>?_method=DELETE"
+												method="POST">
+												<button class="btn btn-xs btn-danger">DELETE</button>
+											</form>
+										</div>
+										<% } %>
+									</div>
+								</div>
+								<br>
+								<% } %>
+							</div>
+						</div>
+						<% } %>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<% include ../partials/footer %>

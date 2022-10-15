@@ -1,0 +1,35 @@
+/*###Desktops, big landscape tablets and laptops(Large, Extra large)####*/
+@media screen and (min-width: 1024px){
+  /*Style*/
+  body {
+    font: italic bold 15px cursive;
+    /* background: url(https://i.imgur.com/E1heTku.jpg) no-repeat;
+    background-size: cover; */
+}
+.checked {
+    color: orange;
+}
+.zoom {
+    transition: transform .8s;
+  }
+.zoom:hover {
+    transform: scale(1.2); 
+  }
+
+  }
+  
+  /*###Tablet(medium)###*/
+  @media screen and (min-width : 768px) and (max-width : 1023px){
+  /*Style*/
+  }
+  
+  /*### Smartphones (portrait and landscape)(small)### */
+  @media screen and (min-width : 0px) and (max-width : 767px){
+  /*Style*/
+  body{
+    font-family: Shrikhand;
+  }
+  .checked {
+    color: orange;
+}
+  }

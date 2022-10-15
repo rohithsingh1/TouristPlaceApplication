@@ -1,0 +1,51 @@
+<% include ../partials/header %>
+
+<div class="container">
+  <header class="jumbotron">
+    <div class="container">
+      <div class = "row text-center" style = "display:flex; flex-wrap: wrap;">
+        <% if(campgrounds.length === 0){ %>
+             <h2>No TourCamps deployed!!</h2>
+        <% }else{ %>
+            <% for(var i=0;i<campgrounds.length;i++){ %>
+                <div class = "col-md-3 col-sm-6">
+                  <div class = "thumbnail" style = " padding: 0px;" data-toggle="modal" data-target = "#modal<%= i %>">
+                    <img src = " <%= campgrounds[i].image %> " style = "width:100%;">
+                      <div class = "caption"  style = "padding:9px; margin-bottom: 28px;">
+                        <p><h4> <%= campgrounds[i].name %></h4></p>
+                          <p>
+                            <a class = "btn btn-info btn-xs pull-left" href = "/campgrounds/<%= campgrounds[i]._id %>/create/<%= campgrounds[i].author.id %>">Add</a>
+                            <a class = "btn btn-danger btn-xs pull-right" href = "/campgrounds/<%= campgrounds[i]._id %>/destroy/<%= campgrounds[i].author.id %>">Delete</a>
+                          </p>                
+                       </div>
+                      </div>
+                   </div>
+                   <div class="modal fade" id="modal<%= i %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header text-center" >
+                           <h4 class="modal-title w-100 font-weight-bold">More Details</h4>
+                            <button type="button" class="close" data-dismiss = "modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                             </button>
+                           </div>
+                           <div class="modal-body ">
+                             <ul class="list-group">
+                               <li class = "list-group-item" >Createdby: <%= campgrounds[i].author.username %></li>
+                               <li class = "list-group-item ">location: <%= campgrounds[i].location %></li>
+                               <li class = "list-group-item "> createdAt: <%= campgrounds[i].createdAt %></li>
+                             </ul>  
+                          </div>
+                       </div>
+                     </div>
+                   </div>
+                 <% } %>       
+        <%  } %>
+          </div>  
+          <a class = "btn btn-primary btn-md" href = "/campgrounds%>">Go Back</a>
+        </div>
+    </header>
+</div>
+
+
+<% include ../partials/footer %>

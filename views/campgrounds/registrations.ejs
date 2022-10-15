@@ -1,0 +1,31 @@
+<% include ../partials/header %>
+<div class = "container" >
+ <div class = "row">
+   <div class = "col-md-12">
+      <div class = "well">
+          <h1> registrations of <%= campground.name %></h1>
+          <% if(registrations){ %>
+            <% for(var i=0;i<registrations.length;i++){ %>
+              <% if(registrations[i].campgroundid == campground._id){ %>
+                <% for(var j=0;j<size;j++){ %>
+                  <strong><%= registrations[i].register1[j].username %></strong>
+                  <span class= "pull-right"><%= moment(registrations[i].register1[j]._id.createdAt).fromNow() %></span>
+                   <p>
+                    <div class="pull-left">
+                      <a href="/campgrounds/<%= campground._id %>/acceptregistrations/<%= registrations[i].register1[j]._id %>" class="btn btn-primary btn-xs">Accept</a>
+                      <a href="/campgrounds/<%= campground._id %>/rejectregistrations/<%= registrations[i].register1[j]._id %>" class="btn btn-danger btn-xs">Reject</a>  
+                    </div>
+                  </p>
+                  <hr>
+                <%}%>
+               <%}%>           
+              <%}%> 
+          <% }else{ %>
+               <h2>No registrations Currently!!!</h2>
+          <% } %>
+       </div>
+     </div>
+   </div>
+</div>
+
+<% include ../partials/footer %>

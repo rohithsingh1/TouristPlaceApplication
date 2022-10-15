@@ -1,0 +1,330 @@
+<% include ../partials/header %>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <p class="lead">TourCamp</p>
+      <div>
+        <ul class="list-group">
+          <li class="list-group-item  active"><a style="text-decoration : none;color:springgreen;" href="#home"
+              data-toggle="tab"><%= campground.name %></a></li>
+          <li class="list-group-item "><a style="text-decoration : none;color: springgreen;" href="#albums"
+              data-toggle="tab">More Images</a></li>
+          <li class="list-group-item ">Info 3</li>
+        </ul>
+      </div>
+      <div style="height:400px; width:100%;margin-bottom: 24px;" id="map"></div>
+    </div>
+    <div class="col-md-9">
+      <div class="tab-content">
+        <div id="home" class="tab-pane in active">
+          <div class="thumbnail" style="padding:0px;">
+            <img class="img-responsive" src="<%= campground.image %>"
+              style="width:100%;image-rendering: auto; image-rendering: crisp-edges; image-rendering: pixelated;">
+            <div class="caption" style="padding:9px;">
+              <h4><a class="pull-right" href="#" style="text-decoration : none;">$<%= campground.cost %></a></h4>
+              <h4>
+                <a href="#" style="text-decoration : none;"><%= campground.name %></a>
+              </h4>
+              <% if(campground.description){ %>
+              <div id="display-none">
+                <p><%= campground.description.substring(0, 10) %>.....</p>
+              </div>
+              <div id="display-block">
+                <p><%= campground.description %></p>
+              </div>
+              <button class="btn btn-info btn-sm" id="btnname" onclick="description()">More info</button>
+              <% }else{ %>
+              <div>
+                <a class="btn btn-info btn-sm" style="margin: 3px;" id="AddDescription"
+                  href="/campgrounds/<%= campground._id %>/AddDescription">AddDescription
+                </a>
+                <br>
+                <br>
+              </div>
+              <% } %>
+              <!-- <p id="demo"></p> -->
+
+              <p>
+                <em>Submitted by: <a style="text-decoration : none;"
+                    href="/users/<%= campground.author.id %>"><%= campground.author.username %></a>,
+                  <%= moment(campground.createdAt).fromNow() %></em>
+              </p>
+
+              <% if(currentUser && campground.author.id.equals(currentUser._id) || (currentUser && currentUser.isAdmin)){ %>
+
+              <a class="btn btn-info btn-sm" style="margin: 3px;"
+                href="/campgrounds/<%= campground._id %>/edit">Edit</a>
+              <form style="display:inline;" style="margin: 3px;"
+                action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST" class="delete-form">
+                <button class="btn btn-danger btn-sm">Delete</button>
+              </form>
+              <% } %>
+
+            </div>
+          </div>
+          <div class="thumbnail">
+            <div class="caption-full">
+              <% if (campground.rating === 0) { %>
+              <h5>
+                <em>No reviews yet.</em>
+              </h5>
+              <% } else { %>
+              <p>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star <% if (campground.rating > 1.5) { %> checked <% } %>"></span>
+                <span class="fa fa-star <% if (campground.rating > 2.5) { %> checked <% } %>"></span>
+                <span class="fa fa-star <% if (campground.rating > 3.5) { %> checked <% } %>"></span>
+                <span class="fa fa-star <% if (campground.rating > 4.5) { %> checked <% } %>"></span>
+                <em>(total reviews: <%= campground.reviews.length %>)</em>
+              </p>
+              <p>
+                Current TourCamp rating: <strong><%= campground.rating.toFixed(2) %></strong>
+              </p>
+              <p>
+                <h4>Latest reviews for this TourCamp:</h4>
+              </p>
+              <hr style="margin-top: 0;">
+
+
+              <% for(var i=0;i<campground.reviews.length;i++){ %>
+              <div class="row">
+                <div class="col-md-12">
+                  <div>
+                    <p>
+                      <span class="pull-left">
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star <% if (campground.reviews[i].rating > 1.5) { %> checked <% } %>"></span>
+                        <span class="fa fa-star <% if (campground.reviews[i].rating > 2.5) { %> checked <% } %>"></span>
+                        <span class="fa fa-star <% if (campground.reviews[i].rating > 3.5) { %> checked <% } %>"></span>
+                        <span class="fa fa-star <% if (campground.reviews[i].rating > 4.5) { %> checked <% } %>"></span>
+                      </span>
+                    </p>
+                    <br>
+                    <strong><%= campground.reviews[i].author.username %></strong>
+                  </div>
+
+
+
+
+
+                  <p>
+                    <%= campground.reviews[i].text %>;
+                    <span class="pull-right"><%= moment(campground.reviews[i].createdAt).fromNow() %></span>
+                  </p>
+
+                  <% if(currentUser && campground.reviews[i].author.id.equals(currentUser._id) || currentUser && currentUser.isAdmin){ %>
+                  <div class="pull-left">
+                    <a href="/campgrounds/<%=campground._id%>/reviews/<%=campground.reviews[i]._id %>/edit"
+                      class="btn btn-primary btn-xs">Edit</a>
+                    <form style="display:inline;" class="delete-form"
+                      action="/campgrounds/<%=campground._id%>/reviews/<%=campground.reviews[i]._id%>?_method=DELETE"
+                      method="POST">
+                      <button class="btn btn-xs btn-danger">DELETE</button>
+                    </form>
+                  </div>
+                  <% } %>
+                </div>
+              </div>
+              <hr>
+              <% } %>
+              <div style="margin-bottom: 10px;">
+                <h4><a href="/campgrounds/<%= campground._id %>/reviews"><i class="fa fa-search" aria-hidden="true"></i>
+                    See all reviews</a></h4>
+              </div>
+              <% } %>
+              <div>
+                <a class="btn btn-primary btn-sm <% if (currentUser && campground.reviews.some(function (review) {return review.author.id.equals(currentUser._id)})) { %> disabled <% } %>"
+                  href="/campgrounds/<%= campground._id %>/reviews/new">
+                  Write a New Review</a>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="well">
+            <div class="text-right">
+
+              <a class="btn btn-primary btn-md pull-left" href="/campgrounds">Go Back</a>
+            </div>
+            <hr>
+
+            <div style="text-align: center; padding-top: 10px; margin: 0 auto;">
+              <form action="/campgrounds/<%= campground._id %>/comments" method="POST">
+                <div class="form-group">
+                  <input style="height: 40px;width: 100%;" class="form-control " type="text" name="text"
+                    placeholder="text" required>
+                </div>
+                <div class="form-group">
+                  <button class="btn btn-sm btn-success pull-left  `">Submit!</button>
+                </div>
+              </form>
+            </div>
+            <hr>
+            <br>
+            <% for(var i=0;i<campground.comments.length;i++){ %>
+            <div class="row">
+              <div class="col-md-12">
+                <strong><%= campground.comments[i].author.username %></strong>
+                <span class="pull-right"><%= moment(campground.comments[i].createdAt).fromNow() %></span>
+                <p>
+                  <%= campground.comments[i].text %>;
+                </p>
+                <% if(currentUser && campground.comments[i].author.id.equals(currentUser._id) || currentUser && currentUser.isAdmin){ %>
+                <div class="pull-left">
+                  <a href="/campgrounds/<%=campground._id%>/comments/<%=campground.comments[i]._id %>/edit"
+                    class="btn btn-primary btn-xs">Edit</a>
+                  <form style="display:inline;" class="delete-form"
+                    action="/campgrounds/<%=campground._id%>/comments/<%=campground.comments[i]._id%>?_method=DELETE"
+                    method="POST">
+                    <button class="btn btn-xs btn-danger">DELETE</button>
+                  </form>
+                </div>
+                <% } %>
+              </div>
+            </div>
+            <%}%>
+                   <hr>
+              </div>
+            </div>
+            <div id="albums" class="tab-pane" >
+                <div class="row text-center">
+                    <div style="text-align: center; padding-top: 35px; margin: 0 auto;">
+                        <form action="/campgrounds/<%= campground._id %>/addpictures/<%= currentUser._id %>"
+            method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+              <input class="form-control" style="height: 40px;width: 100%;" type="text" name="images"
+                placeholder="images">
+            </div>
+            <h3 class="text-center"> or</h3>
+            <div class="form-group">
+              <input type="file" class="form-control" accept="image/*" name="photo">
+            </div>
+            <div class="form-group">
+              <button class="btn btn-sm btn-success pull-left">Submit!</button>
+            </div>
+            </form>
+          </div>
+          <br>
+          <br>
+
+          <div style="display:flex; flex-wrap: wrap;">
+            <% for(var i=0;i<campground.pictures.length;i++){ %>
+            <div class="col-md-6">
+              <div class="thumbnail" style="padding:0px;">
+                <img src=" <%= campground.pictures[i].images %> " style="width:100%;">
+              </div>
+            </div>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<script src='https://unpkg.com/es6-promise@4.2.4/dist/es6-promise.auto.min.js'></script>
+<script src="https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.min.js"></script>
+<script>
+  var location123 = `<%= campground.location %>`;
+  console.log(location123);
+  var displaynone = document.getElementById("display-none");
+  var displayblock = document.getElementById("display-block");
+  var btnname = document.getElementById("btnname");
+  displayblock.style.display = "none";
+  function description() {
+    if (displayblock.style.display === "none") {
+      displaynone.style.display = "none";
+      displayblock.style.display = "block";
+      btnname.innerHTML = "Show less";
+    } else {
+      if (displaynone.style.display === "none") {
+        displaynone.style.display = "block";
+        displayblock.style.display = "none";
+        btnname.innerHTML = "More Info";
+      }
+    }
+  }
+  mapboxgl.accessToken = 'pk.eyJ1Ijoicm9oaXRoc2luZ2giLCJhIjoiY2p3NWJqa2p1MHY2azN5czBmeDUwb25jbSJ9.mb80xk09U3AM8WP7hkIG7g'
+  var mapboxClient = mapboxSdk({ accessToken: mapboxgl.accessToken });
+  mapboxClient.geocoding.forwardGeocode({
+    query: location123,
+    autocomplete: false,
+    limit: 1
+  })
+    .send()
+    .then(function (response) {
+      if (response && response.body && response.body.features && response.body.features.length) {
+        var feature = response.body.features[0];
+
+        var map = new mapboxgl.Map({
+          container: 'map',
+          style: 'mapbox://styles/mapbox/streets-v11',
+          center: feature.center,
+          zoom: 18
+        });
+        new mapboxgl.Marker()
+          .setLngLat(feature.center)
+          .addTo(map);
+
+
+
+        var customData = {
+          "features": [
+            {
+              "type": "Feature",
+              "properties": {
+                "title": "Burnham Park",
+                "description": "A lakefront park on Chicago's south side"
+              },
+              "geometry": {
+                "coordinates": [
+                  -87.603735,
+                  41.829985
+                ],
+                "type": "Point"
+              }
+            }
+          ],
+          "type": "FeatureCollection"
+        };
+        function forwardGeocoder(query) {
+          var matchingFeatures = [];
+          for (var i = 0; i < customData.features.length; i++) {
+            var feature = customData.features[i];
+            // handle queries with different capitalization than the source data by calling toLowerCase()
+            if (feature.properties.title.toLowerCase().search(query.toLowerCase()) !== -1) {
+              alert("entered!!!!!!");
+              // add a tree emoji as a prefix for custom data results
+              // using carmen geojson format: https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
+              feature['place_name'] = '🌲 ' + feature.properties.title;
+              feature['center'] = feature.geometry.coordinates;
+              feature['place_type'] = ['park'];
+              matchingFeatures.push(feature);
+            }
+          }
+          return matchingFeatures;
+        }
+
+        var geocoder = new MapboxGeocoder({
+          accessToken: mapboxgl.accessToken,
+          localGeocoder: forwardGeocoder,
+          marker: {
+            color: 'orange'
+          },
+          mapboxgl: mapboxgl,
+
+        });
+
+        map.addControl(geocoder);
+        map.addControl(new mapboxgl.FullscreenControl());
+        map.addControl(new mapboxgl.NavigationControl());
+      }
+    });
+
+</script>
+
+
+
+
+<% include ../partials/footer %>
