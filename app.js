@@ -1,19 +1,19 @@
 require('dotenv').config();
-let express = require("express"),
-  app = express(),
-  bodyParser = require("body-parser"),
-  mongoose = require("mongoose"),
-  passport = require("passport"),
-  LocalStrategy = require("passport-local").Strategy,
-  flash = require("connect-flash"),
+let express=require("express"),
+  app=express(),
+  bodyParser=require("body-parser"),
+  mongoose=require("mongoose"),
+  passport=require("passport"),
+  LocalStrategy=require("passport-local").Strategy,
+  flash=require("connect-flash"),
   request=require("request"),
-  path = require('path')
-  cookieSession = require("cookie-session"),
-  fetch = require('node-fetch'),
-  session = require("express-session"),
-  MongoStore = require("connect-mongo")(session),
-  methodOverride=require("method-override");
-  dbconfig = require('./config/dbconfig')
+  path=require('path'),
+  cookieSession=require("cookie-session"),
+  fetch=require('node-fetch'),
+  session=require("express-session"),
+  MongoStore=require("connect-mongo")(session),
+  methodOverride=require("method-override"),
+  dbconfig=require('./config/dbconfig');
 
 //models....
 let User = require("./models/user");
